@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using CasaDoCodigo.Models;
 using CasaDoCodigo.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -14,22 +13,17 @@ namespace CasaDoCodigo
 
         public DataService(ApplicationContext contexto, IProdutoRepository produtoRepository)
         {
-            this._contexto = contexto;
-            this._produtoRepository = produtoRepository;
+            _contexto = contexto;
+            _produtoRepository = produtoRepository;
         }
 
         public void InicializaDB()
         {
             _contexto.Database.Migrate();
-            List<Produto> produtos = new List<Produto>();
+            
             List<Livro> livros = GetLivros();
 
-            foreach (Livro livro in livros)
-            {
-                produtos.Add(new Produto(livro.Codigo, livro.Nome, livro.Preco));
-            }
-            
-            _produtoRepository.AddAll(produtos);
+            _produtoRepository.SaveProdutos(livros);
         }
 
         private static List<Livro> GetLivros()

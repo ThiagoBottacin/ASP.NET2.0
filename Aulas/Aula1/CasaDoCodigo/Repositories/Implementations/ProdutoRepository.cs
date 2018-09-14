@@ -1,4 +1,6 @@
-﻿using CasaDoCodigo.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using CasaDoCodigo.Models;
 
 namespace CasaDoCodigo.Repositories
 {
@@ -6,6 +8,18 @@ namespace CasaDoCodigo.Repositories
     {
         public ProdutoRepository(ApplicationContext contexto) : base(contexto)
         {
+        }
+
+        public void SaveProdutos(List<Livro> livros)
+        {
+            foreach (var livro in livros)
+            {
+                if (!_dbSet.Any(p => p.Codigo == livro.Codigo))
+                {
+                    _dbSet.Add(new Produto(livro.Codigo, livro.Nome, livro.Preco));
+                }
+            }
+            _contexto.SaveChanges();
         }
     }
 
